@@ -3,77 +3,23 @@
 #include <cmath>
 // #include <iostream>
 
-using namespace std;
-
-struct Vector3
-{
-  float x, y, z;
-  Vector3 add(Vector3 b)
-  {
-    return {x + b.x, y + b.y, z + b.z};
-  }
-  Vector3 sub(Vector3 b)
-  {
-    return {x - b.x, y - b.y, z - b.z};
-  }
-  Vector3 scale(float s)
-  {
-    return {x * s, y * s, z * s};
-  }
-  float dot(Vector3 b)
-  {
-    return x * b.x + y * b.y + z * b.z;
-  }
-  Vector3 cross(Vector3 b)
-  {
-    return {y * b.z - z * b.y, z * b.x - x * b.z, x * b.y - b.x * y};
-  }
-  float length()
-  {
-    return sqrt(x * x + y * y + z * z);
-  }
-  Vector3 normalize()
-  {
-    return {x / length(), y / length(), z / length()};
-  }
-  bool inTriangle(Vector3 p0, Vector3 p1, Vector3 p2)
-  {
-    return p0.sub(*this).cross(p0.sub(p1)).z >= 0 &&
-           p1.sub(*this).cross(p1.sub(p2)).z >= 0 &&
-           p2.sub(*this).cross(p2.sub(p0)).z >= 0;
-  }
-};
+// using namespace std;
 
 int main()
 {
-
-  const int w=640;
+  const int w = 640;
   const int h = 640;
-
-  Vector3 p0 = {-1, -1, -1};
-  Vector3 p1 = {-1, 1, -1};
-  Vector3 p2 = {1, 1, -1};
-
-
+  
   unsigned char pixels[w * h * 3];
 
   for (float y = 0; y < h; y++)
   {
     for (float x = 0; x < w; x++)
     {
-      float tempX = x/w * 2 -1;
-      float tempY = -1 * (y/h*2-1);
-      Vector3 target = {tempX, tempY, -1};
-      Vector3 camera_origin = {0,0,0};
-      Vector3 r = target.sub(camera_origin).normalize();
-
-      Vector3 plane_normal = {0,0,1};
-      float plane_distance_from_origin = -plane_normal.dot(p0);
-      float distance_to_plane_collision = (-plane_distance_from_origin-plane_normal.dot(camera_origin))/plane_normal.dot(r);
-      Vector3 plane_collision = camera_origin.add(r.scale(distance_to_plane_collision));
+      
 
       int idx = (y * w + x) * 3;
-      bool white = plane_collision.inTriangle(p0, p1, p2);
+      bool white = true;
       unsigned char color = white ? 255 : 0;
       pixels[idx] = color;
       pixels[idx + 1] = color;
