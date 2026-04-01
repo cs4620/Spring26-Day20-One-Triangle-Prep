@@ -1,0 +1,18 @@
+{
+  "tasks": [
+    {
+      "label": "C/C++: g++.exe build active file",
+      "command": "g++",
+      "args": [
+        "-g",
+        "ray-tracer.cpp",
+        "-o",
+        "ray-tracer.exe",
+        //"-lgdi32",
+        //"-lopengl32"
+      ],
+      
+    }
+  ],
+  "version": "2.0.0"
+}

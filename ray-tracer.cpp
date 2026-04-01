@@ -1,7 +1,7 @@
 #define STB_IMAGE_WRITE_IMPLEMENTATION
 #include "stb_image_write.h"
 #include <cmath>
-#include <iostream>
+// #include <iostream>
 
 using namespace std;
 
@@ -44,44 +44,36 @@ struct Vector3
   }
 };
 
-
-
-
-
 int main()
 {
 
-  int w, h;
-  w = h = 640;
+  const int w=640;
+  const int h = 640;
 
   Vector3 p0 = {-1, -1, -1};
   Vector3 p1 = {-1, 1, -1};
   Vector3 p2 = {1, 1, -1};
 
 
-  const int tileSize = 32;
   unsigned char pixels[w * h * 3];
 
   for (float y = 0; y < h; y++)
   {
     for (float x = 0; x < w; x++)
     {
-      if(x==w-1&&y==h-1){
-        cout<<"Stop"<<endl;
-      }
       float tempX = x/w * 2 -1;
       float tempY = -1 * (y/h*2-1);
       Vector3 target = {tempX, tempY, -1};
-      Vector3 o = {0,0,0};
-      Vector3 r = target.sub(o).normalize();
+      Vector3 camera_origin = {0,0,0};
+      Vector3 r = target.sub(camera_origin).normalize();
 
-      Vector3 n = {0,0,1};
-      float d = -n.dot(p0);
-      float t = (-d-n.dot(o))/n.dot(r);
-      Vector3 p = o.add(r.scale(t));
+      Vector3 plane_normal = {0,0,1};
+      float plane_distance_from_origin = -plane_normal.dot(p0);
+      float distance_to_plane_collision = (-plane_distance_from_origin-plane_normal.dot(camera_origin))/plane_normal.dot(r);
+      Vector3 plane_collision = camera_origin.add(r.scale(distance_to_plane_collision));
 
       int idx = (y * w + x) * 3;
-      bool white = p.inTriangle(p0, p1, p2);
+      bool white = plane_collision.inTriangle(p0, p1, p2);
       unsigned char color = white ? 255 : 0;
       pixels[idx] = color;
       pixels[idx + 1] = color;
@@ -89,6 +81,6 @@ int main()
     }
   }
 
-  stbi_write_png("checkerboard.png", w, h, 3, pixels, w * 3);
+  stbi_write_png("image.png", w, h, 3, pixels, w * 3);
   return 0;
 }
