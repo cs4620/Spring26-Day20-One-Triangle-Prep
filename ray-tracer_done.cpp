@@ -42,6 +42,25 @@ struct Vector3
            p1.sub(*this).cross(p1.sub(p2)).z >= 0 &&
            p2.sub(*this).cross(p2.sub(p0)).z >= 0;
   }
+  float* getBarycentric(Vector3 p0, Vector3 p1, Vector3 p2){
+    Vector3 p0p1 = p1.sub(p0);
+    Vector3 p0p2 = p2.sub(p0);
+    Vector3 subp0 = sub(p0);
+    Vector3 subp1 = sub(p1);
+    Vector3 subp2 = sub(p2);
+
+    float area = p0p1.cross(p0p2).length()/2;
+    float areap0p1 = subp0.cross(subp1).length()/2;
+    float areap1p2 = subp1.cross(subp2).length()/2;
+    float areap2p0 = subp2.cross(subp0).length()/2;
+
+    float i = areap0p1 / area;
+    float j = areap1p2 / area;
+    float k = areap2p0 / area;
+
+
+    return new float[]{i, j, k};
+  }
 };
 
 int main()
@@ -73,7 +92,9 @@ int main()
       Vector3 plane_collision = camera_origin.add(ray_direction.scale(distance_to_plane_collision));
 
       int idx = (y * w + x) * 3;
-      bool white = plane_collision.inTriangle(p0, p1, p2);
+      float* ijk = plane_collision.getBarycentric(p0, p1, p2);
+      bool white = abs(1-(ijk[0] + ijk[1] + ijk[2])) < .001;
+      // bool white = plane_collision.inTriangle(p0, p1, p2);
       unsigned char color = white ? 255 : 0;
       pixels[idx] = color;
       pixels[idx + 1] = color;
