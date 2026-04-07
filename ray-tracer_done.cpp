@@ -8,7 +8,7 @@ using namespace std;
 struct Vector3
 {
   float x, y, z;
-  Vector3 add(Vector3 b)
+  Vector3 operator+(Vector3 b)
   {
     return {x + b.x, y + b.y, z + b.z};
   }
@@ -89,7 +89,7 @@ int main()
       Vector3 plane_normal = {0,0,1};
       float plane_distance_from_origin = -plane_normal.dot(p0);
       float distance_to_plane_collision = (-plane_distance_from_origin-plane_normal.dot(camera_origin))/plane_normal.dot(ray_direction);
-      Vector3 plane_collision = camera_origin.add(ray_direction.scale(distance_to_plane_collision));
+      Vector3 plane_collision = camera_origin + (ray_direction.scale(distance_to_plane_collision));
 
       int idx = (y * w + x) * 3;
       float* ijk = plane_collision.getBarycentric(p0, p1, p2);
