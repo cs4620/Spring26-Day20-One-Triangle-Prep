@@ -74,12 +74,18 @@ int main()
       float d = -normal.dot(p0);
 
       //Where do we hit the plane?
-      float t = (-d-camera_origin.dot(normal))/(camera_origin.dot(ray_direction));
-      Vector3 plane_collission = camera_origin.add(ray_direction.times(t));
+      float t = (-d-camera_origin.dot(normal))/(normal.dot(ray_direction));
+      Vector3 plane_collision = camera_origin.add(ray_direction.times(t));
 
       int idx = (y * w + x) * 3;
-      bool white = true;
-      unsigned char color = white ? 255 : 0;
+      
+      //We need to add a check to see if we hit the triangle itself
+      //After we do that, we can change the line below so that 
+      //the color changes based on whether we hit the triangle.
+      //
+      //Until we check for a collision with the triangle, 
+      //the final image will always be completely white.
+      unsigned char color = true ? 255 : 0;
       pixels[idx] = color;
       pixels[idx + 1] = color;
       pixels[idx + 2] = color;
